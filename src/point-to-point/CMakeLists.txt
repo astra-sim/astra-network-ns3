@@ -20,12 +20,18 @@ build_lib(
   SOURCE_FILES
     ${mpi_sources}
     helper/point-to-point-helper.cc
+    model/cn-header.cc
+    model/pause-header.cc
+    model/pint.cc
     model/point-to-point-channel.cc
     model/point-to-point-net-device.cc
     model/ppp-header.cc
   HEADER_FILES
     ${mpi_headers}
     helper/point-to-point-helper.h
+    model/cn-header.h
+    model/pause-header.h
+    model/pint.h
     model/point-to-point-channel.h
     model/point-to-point-net-device.h
     model/ppp-header.h
