@@ -716,6 +716,8 @@ class Packet : public SimpleRefCount<Packet>
      */
     Ptr<NixVector> GetNixVector() const;
 
+    uint8_t* GetBuffer() const;
+
     /**
      * TracedCallback signature for Ptr<Packet>
      *
