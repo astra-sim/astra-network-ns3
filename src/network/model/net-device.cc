@@ -35,6 +35,10 @@ NetDevice::GetTypeId()
     return tid;
 }
 
+bool NetDevice::IsQbb(void) const {
+	return false;
+}
+
 NetDevice::~NetDevice()
 {
     NS_LOG_FUNCTION(this);
