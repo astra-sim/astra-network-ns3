@@ -59,6 +59,18 @@ SeqTsHeader::GetTs() const
     return TimeStep(m_ts);
 }
 
+void
+SeqTsHeader::SetPG (uint16_t pg)
+{
+	m_pg = pg;
+}
+
+uint16_t
+SeqTsHeader::GetPG (void) const
+{
+	return m_pg;
+}
+
 TypeId
 SeqTsHeader::GetTypeId()
 {
