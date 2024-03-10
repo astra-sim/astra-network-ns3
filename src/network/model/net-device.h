@@ -249,6 +249,10 @@ class NetDevice : public Object
      * \return whether the Send operation succeeded
      */
     virtual bool Send(Ptr<Packet> packet, const Address& dest, uint16_t protocolNumber) = 0;
+
+    // For switch
+    virtual bool SwitchSend (uint32_t qIndex, Ptr<Packet> packet, CustomHeader &ch);
+
     /**
      * \param packet packet sent from above down to Network Device
      * \param source source mac address (so called "MAC spoofing")
@@ -369,6 +373,7 @@ class NetDevice : public Object
      * \return true if this interface supports a bridging mode, false otherwise.
      */
     virtual bool SupportsSendFrom() const = 0;
+
 };
 
 } // namespace ns3
