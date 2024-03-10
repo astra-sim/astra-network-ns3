@@ -116,6 +116,11 @@ class Node : public Object
     uint32_t GetNDevices() const;
 
     /**
+     * \returns The type of the node.
+     */
+    uint32_t GetNodeType();
+
+    /**
      * \brief Associate an Application to this Node.
      *
      * \param application Application to associate to this node.
@@ -221,6 +226,11 @@ class Node : public Object
      */
     void DoDispose() override;
     void DoInitialize() override;
+
+    /*
+     * Defines type of node. 1 for switch node, 0 for else.
+     */
+	  uint32_t m_node_type;
 
   private:
     /**

@@ -104,6 +104,7 @@ Node::Node(uint32_t sid)
 void
 Node::Construct()
 {
+    m_node_type = 0;
     NS_LOG_FUNCTION(this);
     m_id = NodeList::Add(this);
 }
@@ -111,6 +112,12 @@ Node::Construct()
 Node::~Node()
 {
     NS_LOG_FUNCTION(this);
+}
+
+uint32_t
+Node::GetNodeType()
+{
+	return m_node_type;
 }
 
 uint32_t
