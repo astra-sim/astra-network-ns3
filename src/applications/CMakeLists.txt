@@ -12,6 +12,7 @@ build_lib(
     model/onoff-application.cc
     model/packet-loss-counter.cc
     model/packet-sink.cc
+    model/rdma-client.cc
     model/seq-ts-echo-header.cc
     model/seq-ts-header.cc
     model/seq-ts-size-header.cc
@@ -36,6 +37,7 @@ build_lib(
     model/onoff-application.h
     model/packet-loss-counter.h
     model/packet-sink.h
+    model/rdma-client.h
     model/seq-ts-echo-header.h
     model/seq-ts-header.h
     model/seq-ts-size-header.h
@@ -49,6 +51,7 @@ build_lib(
     model/udp-server.h
     model/udp-trace-client.h
   LIBRARIES_TO_LINK ${libinternet}
+                    ${libpoint-to-point}
   TEST_SOURCES
     test/three-gpp-http-client-server-test.cc
     test/bulk-send-application-test-suite.cc
