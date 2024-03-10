@@ -236,7 +236,7 @@ class Node : public Object
      */
 	  uint32_t m_node_type;
 
-  private:
+  protected:
     /**
      * \brief Notifies all the DeviceAdditionListener about the new device added.
      * \param device the added device to notify.
