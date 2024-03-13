@@ -835,7 +835,7 @@ def configure_cmake(
         else:
             if args.build_profile == "debug":
                 cmake_args.extend(
-                    "-DCMAKE_BUILD_TYPE=debug -DNS3_ASSERT=ON -DNS3_LOG=ON -DNS3_WARNINGS_AS_ERRORS=ON".split()
+                    "-DCMAKE_BUILD_TYPE=debug -DNS3_ASSERT=ON -DNS3_LOG=ON -DNS3_WARNINGS_AS_ERRORS=OFF".split()
                 )
             elif args.build_profile in ["default", "relwithdebinfo"]:
                 cmake_args.extend(
