@@ -22,6 +22,7 @@
 
 #include "ns3/header.h"
 #include "ns3/nstime.h"
+#include "ns3/int-header.h"
 
 namespace ns3
 {
@@ -71,6 +72,7 @@ class SeqTsHeader : public Header
     TypeId GetInstanceTypeId() const override;
     void Print(std::ostream& os) const override;
     uint32_t GetSerializedSize() const override;
+    static uint32_t GetHeaderSize(void);
     void Serialize(Buffer::Iterator start) const override;
     uint32_t Deserialize(Buffer::Iterator start) override;
 
@@ -78,6 +80,8 @@ class SeqTsHeader : public Header
     uint32_t m_seq; //!< Sequence number
     uint64_t m_ts;  //!< Timestamp
     uint16_t m_pg;
+  public:
+    IntHeader ih;
 };
 
 } // namespace ns3

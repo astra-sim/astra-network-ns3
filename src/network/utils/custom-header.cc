@@ -86,7 +86,7 @@ void CustomHeader::Print (std::ostream &os) const{
 uint32_t CustomHeader::GetSerializedSize (void) const{
 	uint32_t len = 0;
 	if (headerType & L2_Header)
-		len += 14;
+		len += 2;
 	if (headerType & L3_Header)
 		len += 5*4;
 	if (headerType & L4_Header){
@@ -192,8 +192,7 @@ CustomHeader::Deserialize (Buffer::Iterator start)
   int l2Size = 0;
   if (headerType & L2_Header){
 	  pppProto = i.ReadNtohU16();
-	  i.Next(12);
-	  l2Size = 14;
+	  l2Size = 2;
   }
 
   // L3
