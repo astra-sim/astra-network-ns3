@@ -100,6 +100,11 @@ class PointToPointNetDevice : public NetDevice
     void SetDataRate(DataRate bps);
 
     /**
+     * \return the DataRate of this device
+     */
+    DataRate GetDataRate();
+
+    /**
      * Set the interframe gap used to separate packets.  The interframe gap
      * defines the minimum space required between packets sent by this device.
      *
