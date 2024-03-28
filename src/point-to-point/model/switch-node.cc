@@ -9,6 +9,7 @@
 #include "switch-node.h"
 #include "qbb-net-device.h"
 #include "ppp-header.h"
+#include "ns3/simulator.h"
 #include "ns3/int-header.h"
 #include <cmath>
 

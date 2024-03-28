@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include "ns3/double.h"
 #include "ns3/packet.h"
 #include "ns3/simulator.h"
 #include "ns3/object-vector.h"
@@ -9,7 +10,7 @@
 #include "ns3/global-value.h"
 #include "ns3/boolean.h"
 #include "ns3/simulator.h"
-#include "ns3/random-variable.h"
+#include "ns3/random-variable-stream.h"
 #include "switch-mmu.h"
 
 NS_LOG_COMPONENT_DEFINE("SwitchMmu");
@@ -103,7 +104,10 @@ namespace ns3 {
 			return true;
 		if (egress_bytes[ifindex][qIndex] > kmin[ifindex]){
 			double p = pmax[ifindex] * double(egress_bytes[ifindex][qIndex] - kmin[ifindex]) / (kmax[ifindex] - kmin[ifindex]);
-			if (UniformVariable(0, 1).GetValue() < p)
+			Ptr<UniformRandomVariable> rng_generator = CreateObject<UniformRandomVariable> ();
+			rng_generator->SetAttribute ("Min", DoubleValue (0));
+			rng_generator->SetAttribute ("Max", DoubleValue (1));
+			if (rng_generator->GetValue() < p)
 				return true;
 		}
 		return false;
