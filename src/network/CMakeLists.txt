@@ -35,6 +35,7 @@ set(source_files
     utils/custom-header.cc
     utils/data-rate.cc
     utils/drop-tail-queue.cc
+    utils/drop-tail-queue-packet.cc
     utils/dynamic-queue-limits.cc
     utils/error-channel.cc
     utils/error-model.cc
@@ -114,6 +115,7 @@ set(header_files
     utils/custom-header.h
     utils/data-rate.h
     utils/drop-tail-queue.h
+    utils/drop-tail-queue-packet.h
     utils/dynamic-queue-limits.h
     utils/error-channel.h
     utils/error-model.h
