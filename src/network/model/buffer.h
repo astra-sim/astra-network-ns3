@@ -612,6 +612,8 @@ class Buffer
      */
     uint32_t CopyData(uint8_t* buffer, uint32_t size) const;
 
+    uint8_t* GetBuffer() const;
+
     /**
      * \brief Copy constructor
      * \param o the buffer to copy

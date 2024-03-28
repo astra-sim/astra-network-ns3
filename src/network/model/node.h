@@ -25,6 +25,7 @@
 #include "ns3/callback.h"
 #include "ns3/object.h"
 #include "ns3/ptr.h"
+#include "ns3/net-device.h"
 
 #include <vector>
 
@@ -114,6 +115,11 @@ class Node : public Object
      *          to this Node.
      */
     uint32_t GetNDevices() const;
+
+    /**
+     * \returns The type of the node.
+     */
+    uint32_t GetNodeType();
 
     /**
      * \brief Associate an Application to this Node.
@@ -213,6 +219,9 @@ class Node : public Object
      */
     static bool ChecksumEnabled();
 
+    virtual bool SwitchReceiveFromDevice(Ptr<NetDevice> device, Ptr<Packet> packet, CustomHeader &ch);
+    virtual void SwitchNotifyDequeue(uint32_t ifIndex, uint32_t qIndex, Ptr<Packet> p);
+
   protected:
     /**
      * The dispose method. Subclasses must override this method
@@ -222,7 +231,12 @@ class Node : public Object
     void DoDispose() override;
     void DoInitialize() override;
 
-  private:
+    /*
+     * Defines type of node. 1 for switch node, 0 for else.
+     */
+	  uint32_t m_node_type;
+
+  protected:
     /**
      * \brief Notifies all the DeviceAdditionListener about the new device added.
      * \param device the added device to notify.

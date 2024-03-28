@@ -30,9 +30,12 @@ set(source_files
     utils/address-utils.cc
     utils/bit-deserializer.cc
     utils/bit-serializer.cc
+    utils/broadcom-egress-queue.cc
     utils/crc32.cc
+    utils/custom-header.cc
     utils/data-rate.cc
     utils/drop-tail-queue.cc
+    utils/drop-tail-queue-packet.cc
     utils/dynamic-queue-limits.cc
     utils/error-channel.cc
     utils/error-model.cc
@@ -41,6 +44,7 @@ set(source_files
     utils/flow-id-tag.cc
     utils/inet-socket-address.cc
     utils/inet6-socket-address.cc
+    utils/int-header.cc
     utils/ipv4-address.cc
     utils/ipv6-address.cc
     utils/llc-snap-header.cc
@@ -66,6 +70,7 @@ set(source_files
     utils/queue-size.cc
     utils/queue.cc
     utils/radiotap-header.cc
+    utils/red-queue.cc
     utils/simple-channel.cc
     utils/simple-net-device.cc
     utils/sll-header.cc
@@ -105,9 +110,12 @@ set(header_files
     utils/address-utils.h
     utils/bit-deserializer.h
     utils/bit-serializer.h
+    utils/broadcom-egress-queue.h
     utils/crc32.h
+    utils/custom-header.h
     utils/data-rate.h
     utils/drop-tail-queue.h
+    utils/drop-tail-queue-packet.h
     utils/dynamic-queue-limits.h
     utils/error-channel.h
     utils/error-model.h
@@ -119,6 +127,7 @@ set(header_files
     utils/inet6-socket-address.h
     utils/ipv4-address.h
     utils/ipv6-address.h
+    utils/int-header.h
     utils/llc-snap-header.h
     utils/lollipop-counter.h
     utils/mac16-address.h
@@ -145,6 +154,7 @@ set(header_files
     utils/queue-size.h
     utils/queue.h
     utils/radiotap-header.h
+    utils/red-queue.h
     utils/sequence-number.h
     utils/simple-channel.h
     utils/simple-net-device.h

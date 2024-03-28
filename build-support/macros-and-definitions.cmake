@@ -216,9 +216,9 @@ macro(process_options)
         add_compile_options(/WX)
       endif()
     else()
-      add_compile_options(-Wall) # -Wextra
+      add_compile_options(-Wall -O0) # -Wextra
       if(${NS3_WARNINGS_AS_ERRORS})
-        add_compile_options(-Werror -Wno-error=deprecated-declarations)
+        add_compile_options(-Werror -Wno-error=sign-compare -Wno-error=deprecated-declarations)
       endif()
     endif()
   endif()

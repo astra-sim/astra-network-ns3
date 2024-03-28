@@ -59,6 +59,18 @@ SeqTsHeader::GetTs() const
     return TimeStep(m_ts);
 }
 
+void
+SeqTsHeader::SetPG (uint16_t pg)
+{
+	m_pg = pg;
+}
+
+uint16_t
+SeqTsHeader::GetPG (void) const
+{
+	return m_pg;
+}
+
 TypeId
 SeqTsHeader::GetTypeId()
 {
@@ -86,7 +98,11 @@ uint32_t
 SeqTsHeader::GetSerializedSize() const
 {
     NS_LOG_FUNCTION(this);
-    return 4 + 8;
+	return GetHeaderSize();
+}
+
+uint32_t SeqTsHeader::GetHeaderSize(void){
+	return 6 + IntHeader::GetStaticSize();
 }
 
 void
@@ -95,7 +111,10 @@ SeqTsHeader::Serialize(Buffer::Iterator start) const
     NS_LOG_FUNCTION(this << &start);
     Buffer::Iterator i = start;
     i.WriteHtonU32(m_seq);
-    i.WriteHtonU64(m_ts);
+    i.WriteHtonU16(m_pg);
+
+    // write IntHeader
+    ih.Serialize(i);
 }
 
 uint32_t
@@ -104,8 +123,11 @@ SeqTsHeader::Deserialize(Buffer::Iterator start)
     NS_LOG_FUNCTION(this << &start);
     Buffer::Iterator i = start;
     m_seq = i.ReadNtohU32();
-    m_ts = i.ReadNtohU64();
-    return GetSerializedSize();
+    m_pg =  i.ReadNtohU16 ();
+
+    // read IntHeader
+    ih.Deserialize(i);
+    return GetSerializedSize ();
 }
 
 } // namespace ns3

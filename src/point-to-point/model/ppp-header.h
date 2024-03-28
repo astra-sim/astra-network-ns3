@@ -76,6 +76,7 @@ class PppHeader : public Header
     void Serialize(Buffer::Iterator start) const override;
     uint32_t Deserialize(Buffer::Iterator start) override;
     uint32_t GetSerializedSize() const override;
+    static uint32_t GetStaticSize (void);
 
     /**
      * \brief Set the protocol type carried by this PPP packet

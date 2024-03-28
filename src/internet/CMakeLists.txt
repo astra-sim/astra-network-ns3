@@ -204,6 +204,7 @@ set(header_files
     model/ipv6.h
     model/loopback-net-device.h
     model/ndisc-cache.h
+    model/rdma.h
     model/rip-header.h
     model/rip.h
     model/ripng-header.h

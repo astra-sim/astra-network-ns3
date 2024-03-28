@@ -104,6 +104,7 @@ Node::Node(uint32_t sid)
 void
 Node::Construct()
 {
+    m_node_type = 0;
     NS_LOG_FUNCTION(this);
     m_id = NodeList::Add(this);
 }
@@ -111,6 +112,12 @@ Node::Construct()
 Node::~Node()
 {
     NS_LOG_FUNCTION(this);
+}
+
+uint32_t
+Node::GetNodeType()
+{
+	return m_node_type;
 }
 
 uint32_t
@@ -389,6 +396,14 @@ Node::NotifyDeviceAdded(Ptr<NetDevice> device)
     {
         (*i)(device);
     }
+}
+
+bool Node::SwitchReceiveFromDevice(Ptr<NetDevice> device, Ptr<Packet> packet, CustomHeader &ch){
+	NS_ASSERT_MSG(false, "Calling SwitchReceiveFromDevice() on a non-switch node or this function is not implemented");
+}
+
+void Node::SwitchNotifyDequeue(uint32_t ifIndex, uint32_t qIndex, Ptr<Packet> p){
+	NS_ASSERT_MSG(false, "Calling NotifyDequeue() on a non-switch node or this function is not implemented");
 }
 
 } // namespace ns3
