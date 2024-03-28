@@ -34,7 +34,7 @@ TypeId RdmaHw::GetTypeId (void)
 				UintegerValue(0),
 				MakeUintegerAccessor(&RdmaHw::m_cc_mode),
 				MakeUintegerChecker<uint32_t>())
-		.AddAttribute("NACK Generation Interval",
+		.AddAttribute("NACK_Generation_Interval",
 				"The NACK Generation interval",
 				DoubleValue(500.0),
 				MakeDoubleAccessor(&RdmaHw::m_nack_interval),
