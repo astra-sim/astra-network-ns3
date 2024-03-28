@@ -211,7 +211,6 @@ class PointToPointNetDevice : public NetDevice
      */
     void DoMpiReceive(Ptr<Packet> p);
 
-  private:
     /**
      * \brief Dispose of the object
      */
