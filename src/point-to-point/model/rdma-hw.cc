@@ -194,7 +194,7 @@ void RdmaHw::SetNode(Ptr<Node> node){
 void RdmaHw::Setup(QpCompleteCallback cb){
 	for (uint32_t i = 0; i < m_nic.size(); i++){
 		Ptr<QbbNetDevice> dev = m_nic[i].dev;
-		if (dev == NULL)
+		if (!dev)
 			continue;
 		// share data with NIC
 		dev->m_rdmaEQ->m_qpGrp = m_nic[i].qpGrp;
@@ -312,7 +312,7 @@ void RdmaHw::PCIeResume(uint32_t nic_idx, uint32_t qIndex){
 	Ptr<Packet> p = dev->NICSendPfc(qIndex, 1);
 	m_nic[nic_idx].dev->RdmaEnqueueHighPrioQ(p);
     m_nic[nic_idx].dev->TriggerTransmit();
-    Simulator::Schedule(MicroSeconds(1000), &RdmaHw::EnablePause, this);	
+    Simulator::Schedule(MicroSeconds(1000), &RdmaHw::EnablePause, this);
 }
 
 void RdmaHw::EnablePause(){
@@ -329,7 +329,7 @@ void RdmaHw::PCIePause(uint32_t nic_idx, uint32_t qIndex){
 	m_nic[nic_idx].dev->RdmaEnqueueHighPrioQ(p);
     m_nic[nic_idx].dev->TriggerTransmit();
 	std::cout << "NIC pause "<< m_node->GetId() << " at " << Simulator::Now().GetNanoSeconds() << " paused " << m_paused_times << std::endl;
-    Simulator::Schedule(MicroSeconds(10), &RdmaHw::PCIeResume, this, nic_idx, qIndex);	
+    Simulator::Schedule(MicroSeconds(10), &RdmaHw::PCIeResume, this, nic_idx, qIndex);
 }
 
 int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch){
@@ -360,7 +360,7 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch){
 		std::cout << " " << ch.udp.dport << " " << ch.udp.seq << " " << ch.udp.pg << " " << p->GetSize() << " " << payload_size;
 		std::cout << " ReceiverCheckSeq " << x << std::endl;
 	}
-	
+
 	if (x == 1 || x == 2){ //generate ACK or NACK
 		qbbHeader seqh;
 		seqh.SetSeq(rxQp->ReceiverNextExpectedSeq);
@@ -409,13 +409,13 @@ int RdmaHw::ReceiveCnp(Ptr<Packet> p, CustomHeader &ch){
 	uint32_t i;
 	// get qp
 	Ptr<RdmaQueuePair> qp = GetQp(ch.sip, udpport, qIndex);
-	if (qp == NULL)
+	if (!qp)
 		std::cout << "ERROR: QCN NIC cannot find the flow\n";
 	// get nic
 	uint32_t nic_idx = GetNicIdxOfQp(qp);
 	Ptr<QbbNetDevice> dev = m_nic[nic_idx].dev;
 
-	if (qp->m_rate == 0)			//lazy initialization	
+	if (qp->m_rate == 0)			//lazy initialization
 	{
 		qp->m_rate = dev->GetDataRate();
 		if (m_cc_mode == 1){
@@ -442,7 +442,7 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch){
 	uint8_t cnp = (ch.ack.flags >> qbbHeader::FLAG_CNP) & 1;
 	int i;
 	Ptr<RdmaQueuePair> qp = GetQp(ch.sip, port, qIndex);
-	if (qp == NULL){
+	if (!qp){
 		return 0;
 	}
 
@@ -468,7 +468,7 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch){
 	if (cnp){
 		if (m_cc_mode == 1){ // mlx version
 			cnp_received_mlx(qp);
-		} 
+		}
 	}
 
 	if (m_cc_mode == 3){
@@ -523,7 +523,7 @@ int RdmaHw::ReceiverCheckSeq(uint32_t seq, Ptr<RdmaRxQueuePair> q, uint32_t size
 		}else
 			return 4;
 	}else {
-		// Duplicate. 
+		// Duplicate.
 		return 3;
 	}
 }
@@ -579,7 +579,7 @@ void RdmaHw::ClearTable(){
 void RdmaHw::RedistributeQp(){
 	// clear old qpGrp
 	for (uint32_t i = 0; i < m_nic.size(); i++){
-		if (m_nic[i].dev == NULL)
+		if (!m_nic[i].dev)
 			continue;
 		m_nic[i].qpGrp->Clear();
 	}
@@ -640,16 +640,16 @@ void RdmaHw::PktSent(Ptr<RdmaQueuePair> qp, Ptr<Packet> pkt, Time interframeGap)
 void RdmaHw::UpdateNextAvail(Ptr<RdmaQueuePair> qp, Time interframeGap, uint32_t pkt_size){
 	Time sendingTime;
 	if (m_rateBound)
-		sendingTime = interframeGap + Seconds(qp->m_rate.CalculateTxTime(pkt_size));
+		sendingTime = interframeGap + qp->m_rate.CalculateBytesTxTime(pkt_size);
 	else
-		sendingTime = interframeGap + Seconds(qp->m_max_rate.CalculateTxTime(pkt_size));
+		sendingTime = interframeGap + qp->m_max_rate.CalculateBytesTxTime(pkt_size);
 	qp->m_nextAvail = Simulator::Now() + sendingTime;
 }
 
 void RdmaHw::ChangeRate(Ptr<RdmaQueuePair> qp, DataRate new_rate){
 	#if 1
-	Time sendingTime = Seconds(qp->m_rate.CalculateTxTime(qp->lastPktSize));
-	Time new_sendintTime = Seconds(new_rate.CalculateTxTime(qp->lastPktSize));
+	Time sendingTime = qp->m_rate.CalculateBytesTxTime(qp->lastPktSize);
+	Time new_sendintTime = new_rate.CalculateBytesTxTime(qp->lastPktSize);
 	qp->m_nextAvail = qp->m_nextAvail + new_sendintTime - sendingTime;
 	// update nic's next avail event
 	uint32_t nic_idx = GetNicIdxOfQp(qp);
@@ -1018,7 +1018,7 @@ void RdmaHw::UpdateRateTimely(Ptr<RdmaQueuePair> qp, Ptr<Packet> p, CustomHeader
 				qp->tmly.rttDiff = rtt_diff;
 			}
 		}else{
-			qp->m_rate = std::max(m_minRate, qp->tmly.m_curRate * c); 
+			qp->m_rate = std::max(m_minRate, qp->tmly.m_curRate * c);
 			if (!us){
 				qp->tmly.m_curRate = qp->m_rate;
 				qp->tmly.m_incStage = 0;

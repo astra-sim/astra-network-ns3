@@ -10,7 +10,8 @@ TypeId RdmaDriver::GetTypeId (void)
 	static TypeId tid = TypeId ("ns3::RdmaDriver")
 		.SetParent<Object> ()
 		.AddTraceSource ("QpComplete", "A qp completes.",
-				MakeTraceSourceAccessor (&RdmaDriver::m_traceQpComplete))
+				MakeTraceSourceAccessor (&RdmaDriver::m_traceQpComplete),
+				"ns3::Packet::TracedCallback")
 		;
 	return tid;
 }
