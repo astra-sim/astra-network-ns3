@@ -22,7 +22,7 @@
 #include <queue>
 #include "ns3/packet.h"
 #include "queue.h"
-#include "drop-tail-queue.h"
+#include "drop-tail-queue-packet.h"
 #include "red-queue.h"
 #include "ns3/point-to-point-net-device.h"
 #include "ns3/event-id.h"

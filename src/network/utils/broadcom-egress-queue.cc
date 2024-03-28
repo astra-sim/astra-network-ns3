@@ -64,7 +64,7 @@ namespace ns3 {
 		{
 			m_bytesInQueue[i] = 0;
 			//m_queues.push_back(CreateObject<RedQueue>());
-			m_queues.push_back(CreateObject<DropTailQueue>());
+			m_queues.push_back(CreateObject<DropTailQueuePacket>());
 		}
 	}
 
