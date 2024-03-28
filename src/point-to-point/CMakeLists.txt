@@ -28,6 +28,13 @@ build_lib(
     model/point-to-point-net-device.cc
     model/point-to-point-remote-channel.cc
     model/ppp-header.cc
+    model/qbb-channel.cc
+    model/qbb-header.cc
+    model/qbb-net-device.cc
+    model/qbb-remote-channel.cc
+    # model/rdma-driver.cc
+    # model/rdma-hw.cc
+    # model/rdma-queue-pair.cc
   HEADER_FILES
     ${mpi_headers}
     helper/point-to-point-helper.h
