@@ -30,7 +30,7 @@ set(source_files
     utils/address-utils.cc
     utils/bit-deserializer.cc
     utils/bit-serializer.cc
-    # utils/broadcom-egress-queue.cc
+    utils/broadcom-egress-queue.cc
     utils/crc32.cc
     utils/custom-header.cc
     utils/data-rate.cc
@@ -69,7 +69,7 @@ set(source_files
     utils/queue-size.cc
     utils/queue.cc
     utils/radiotap-header.cc
-    # utils/red-queue.cc
+    utils/red-queue.cc
     utils/simple-channel.cc
     utils/simple-net-device.cc
     utils/sll-header.cc
@@ -109,7 +109,7 @@ set(header_files
     utils/address-utils.h
     utils/bit-deserializer.h
     utils/bit-serializer.h
-    # utils/broadcom-egress-queue.h
+    utils/broadcom-egress-queue.h
     utils/crc32.h
     utils/custom-header.h
     utils/data-rate.h
@@ -152,7 +152,7 @@ set(header_files
     utils/queue-size.h
     utils/queue.h
     utils/radiotap-header.h
-    # utils/red-queue.h
+    utils/red-queue.h
     utils/sequence-number.h
     utils/simple-channel.h
     utils/simple-net-device.h

@@ -26,10 +26,10 @@
 #include "red-queue.h"
 #include "broadcom-egress-queue.h"
 
-NS_LOG_COMPONENT_DEFINE("BEgressQueue");
 
 namespace ns3 {
 
+	NS_LOG_COMPONENT_DEFINE("BEgressQueue");
 	NS_OBJECT_ENSURE_REGISTERED(BEgressQueue);
 
 	TypeId BEgressQueue::GetTypeId(void)
@@ -43,16 +43,19 @@ namespace ns3 {
 				MakeDoubleAccessor(&BEgressQueue::m_maxBytes),
 				MakeDoubleChecker<double>())
 			.AddTraceSource ("BeqEnqueue", "Enqueue a packet in the BEgressQueue. Multiple queue",
-					MakeTraceSourceAccessor (&BEgressQueue::m_traceBeqEnqueue))
+					MakeTraceSourceAccessor (&BEgressQueue::m_traceBeqEnqueue),
+					"ns3::BeqDequeue::BEgressQueue")
 			.AddTraceSource ("BeqDequeue", "Dequeue a packet in the BEgressQueue. Multiple queue",
-					MakeTraceSourceAccessor (&BEgressQueue::m_traceBeqDequeue))
+					MakeTraceSourceAccessor (&BEgressQueue::m_traceBeqDequeue),
+					"ns3::BeqDequeue::BEgressQueue")
 			;
 
 		return tid;
 	}
 
 	BEgressQueue::BEgressQueue() :
-		Queue()
+		Queue(),
+  		NS_LOG_TEMPLATE_DEFINE("BEgressQueue")
 	{
 		NS_LOG_FUNCTION_NOARGS();
 		m_bytesInQueueTotal = 0;
@@ -69,6 +72,81 @@ namespace ns3 {
 	{
 		NS_LOG_FUNCTION_NOARGS();
 	}
+
+	bool
+	BEgressQueue::Enqueue (Ptr<Packet> p)
+	{
+	NS_LOG_FUNCTION (this << p);
+
+	//
+	// If DoEnqueue fails, Queue::Drop is called by the subclass
+	//
+	bool retval = DoEnqueue (p);
+	if (retval)
+		{
+		NS_LOG_LOGIC ("m_traceEnqueue (p)");
+		m_traceEnqueue (p);
+
+		uint32_t size = p->GetSize ();
+		m_nBytes += size;
+		m_nTotalReceivedBytes += size;
+
+		m_nPackets++;
+		m_nTotalReceivedPackets++;
+		}
+	return retval;
+	}
+
+	Ptr<Packet>
+	BEgressQueue::Dequeue (void)
+	{
+	NS_LOG_FUNCTION (this);
+
+	Ptr<Packet> packet = DoDequeue ();
+
+	if (packet)
+		{
+		NS_ASSERT (m_nBytes >= packet->GetSize ());
+		NS_ASSERT (m_nPackets > 0);
+
+		m_nBytes -= packet->GetSize ();
+		m_nPackets--;
+
+		NS_LOG_LOGIC ("m_traceDequeue (packet)");
+		m_traceDequeue (packet);
+		}
+	return packet;
+	}
+
+	Ptr<Packet>
+	BEgressQueue::Remove (void)
+	{
+	NS_LOG_FUNCTION (this);
+
+	Ptr<Packet> packet = DoDequeue ();
+
+	if (packet)
+		{
+		NS_ASSERT (m_nBytes >= packet->GetSize ());
+		NS_ASSERT (m_nPackets > 0);
+
+		m_nBytes -= packet->GetSize ();
+		m_nPackets--;
+
+		NS_LOG_LOGIC ("m_traceDequeue (packet)");
+		m_traceDequeue (packet);
+		m_traceDrop (packet);
+		}
+	return packet;
+	}
+
+	Ptr<const Packet>
+	BEgressQueue::Peek (void) const
+	{
+	NS_LOG_FUNCTION (this);
+	return DoPeek ();
+	}
+
 
 	bool
 		BEgressQueue::DoEnqueue(Ptr<Packet> p, uint32_t qIndex)
@@ -169,7 +247,7 @@ namespace ns3 {
 	{
 		NS_LOG_FUNCTION(this);
 		Ptr<Packet> packet = DoDequeueRR(paused);
-		if (packet != 0)
+		if (packet)
 		{
 			NS_ASSERT(m_nBytes >= packet->GetSize());
 			NS_ASSERT(m_nPackets > 0);

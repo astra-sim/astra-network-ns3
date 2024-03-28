@@ -31,7 +31,7 @@ namespace ns3 {
 
 	class TraceContainer;
 
-	class BEgressQueue : public Queue {
+	class BEgressQueue : public Queue <Packet> {
 	public:
 		static TypeId GetTypeId(void);
 		static const unsigned fCnt = 128; //max number of queues, 128 for NICs
@@ -47,6 +47,34 @@ namespace ns3 {
 		TracedCallback<Ptr<const Packet>, uint32_t> m_traceBeqEnqueue;
 		TracedCallback<Ptr<const Packet>, uint32_t> m_traceBeqDequeue;
 
+		/**
+		 * Place an item into the Queue (each subclass defines the position)
+		 * \param item item to enqueue
+		 * \return True if the operation was successful; false otherwise
+		 */
+		bool Enqueue(Ptr<Packet> item);
+
+		/**
+		 * Remove an item from the Queue (each subclass defines the position),
+		 * counting it and tracing it as dequeued
+		 * \return 0 if the operation was not successful; the item otherwise.
+		 */
+		Ptr<Packet> Dequeue();
+
+		/**
+		 * Remove an item from the Queue (each subclass defines the position),
+		 * counting it and tracing it as both dequeued and dropped
+		 * \return 0 if the operation was not successful; the item otherwise.
+		 */
+		Ptr<Packet> Remove();
+
+		/**
+		 * Get a copy of an item in the queue (each subclass defines the position)
+		 * without removing it
+		 * \return 0 if the operation was not successful; the item otherwise.
+		 */
+		Ptr<const Packet> Peek() const;
+
 	private:
 		bool DoEnqueue(Ptr<Packet> p, uint32_t qIndex);
 		Ptr<Packet> DoDequeueRR(bool paused[]);
@@ -55,11 +83,17 @@ namespace ns3 {
 		virtual Ptr<Packet> DoDequeue(void);
 		virtual Ptr<const Packet> DoPeek(void) const;
 		double m_maxBytes; //total bytes limit
+  		NS_LOG_TEMPLATE_DECLARE; //!< the log component
 		uint32_t m_bytesInQueue[fCnt];
 		uint32_t m_bytesInQueueTotal;
 		uint32_t m_rrlast;
 		uint32_t m_qlast;
 		std::vector<Ptr<Queue> > m_queues; // uc queues
+
+	protected:
+		TracedCallback<Ptr<const Packet> > m_traceEnqueue;
+		TracedCallback<Ptr<const Packet> > m_traceDequeue;
+ 		TracedCallback<Ptr<const Packet> > m_traceDrop;
 	};
 
 } // namespace ns3

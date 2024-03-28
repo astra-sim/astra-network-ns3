@@ -79,7 +79,7 @@ class UniformRandomVariable;
  *
  * \brief A RED packet queue
  */
-class RedQueue : public Queue
+class RedQueue : public Queue <Packet>
 {
 public:
   static TypeId GetTypeId (void);
@@ -121,6 +121,34 @@ public:
     DTYPE_FORCED,      // A "forced" drop
     DTYPE_UNFORCED,    // An "unforced" (random) drop
   };
+
+  /**
+   * Place an item into the Queue (each subclass defines the position)
+   * \param item item to enqueue
+   * \return True if the operation was successful; false otherwise
+   */
+  bool Enqueue(Ptr<Packet> item);
+
+  /**
+   * Remove an item from the Queue (each subclass defines the position),
+   * counting it and tracing it as dequeued
+   * \return 0 if the operation was not successful; the item otherwise.
+   */
+  Ptr<Packet> Dequeue();
+
+  /**
+   * Remove an item from the Queue (each subclass defines the position),
+   * counting it and tracing it as both dequeued and dropped
+   * \return 0 if the operation was not successful; the item otherwise.
+   */
+  Ptr<Packet> Remove();
+
+  /**
+   * Get a copy of an item in the queue (each subclass defines the position)
+   * without removing it
+   * \return 0 if the operation was not successful; the item otherwise.
+   */
+  Ptr<const Packet> Peek() const;
 
   /*
    * \brief Set the operating mode of this queue.
@@ -177,6 +205,7 @@ public:
   */
   int64_t AssignStreams (int64_t stream);
 
+
 private:
   virtual bool DoEnqueue (Ptr<Packet> p);
   virtual Ptr<Packet> DoDequeue (void);
@@ -196,6 +225,7 @@ private:
                   uint32_t meanPktSize, bool wait, uint32_t size);
 
   std::list<Ptr<Packet> > m_packets;
+  NS_LOG_TEMPLATE_DECLARE; //!< the log component
 
   uint32_t m_bytesInQueue;
   bool m_hasRedStarted;
@@ -267,6 +297,12 @@ private:
   Time m_idleTime;
 
   Ptr<UniformRandomVariable> m_uv;
+
+protected:
+  TracedCallback<Ptr<const Packet> > m_traceEnqueue;
+  TracedCallback<Ptr<const Packet> > m_traceDequeue;
+  TracedCallback<Ptr<const Packet> > m_traceDrop;
+
 };
 
 }; // namespace ns3

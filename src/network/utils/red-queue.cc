@@ -65,10 +65,10 @@
 #include "ns3/random-variable-stream.h"
 #include "red-queue.h"
 
-NS_LOG_COMPONENT_DEFINE ("RedQueue");
 
 namespace ns3 {
 
+NS_LOG_COMPONENT_DEFINE ("RedQueue");
 NS_OBJECT_ENSURE_REGISTERED (RedQueue);
 
 TypeId RedQueue::GetTypeId (void)
@@ -79,7 +79,7 @@ TypeId RedQueue::GetTypeId (void)
     .AddAttribute ("Mode",
                    "Determines unit for QueueLimit",
                    EnumValue (QUEUE_MODE_PACKETS),
-                   MakeEnumAccessor (&RedQueue::SetMode),
+                   MakeEnumAccessor<QueueMode>(&RedQueue::SetMode),
                    MakeEnumChecker (QUEUE_MODE_BYTES, "QUEUE_MODE_BYTES",
                                     QUEUE_MODE_PACKETS, "QUEUE_MODE_PACKETS"))
     .AddAttribute ("MeanPktSize",
@@ -156,7 +156,8 @@ RedQueue::RedQueue () :
   Queue (),
   m_packets (),
   m_bytesInQueue (0),
-  m_hasRedStarted (false)
+  m_hasRedStarted (false),
+  NS_LOG_TEMPLATE_DEFINE("RedQueue")
 {
   NS_LOG_FUNCTION_NOARGS ();
   m_uv = CreateObject<UniformRandomVariable> ();
@@ -209,6 +210,81 @@ RedQueue::AssignStreams (int64_t stream)
   m_uv->SetStream (stream);
   return 1;
 }
+
+bool
+RedQueue::Enqueue (Ptr<Packet> p)
+{
+  NS_LOG_FUNCTION (this << p);
+
+  //
+  // If DoEnqueue fails, Queue::Drop is called by the subclass
+  //
+  bool retval = DoEnqueue (p);
+  if (retval)
+    {
+      NS_LOG_LOGIC ("m_traceEnqueue (p)");
+      m_traceEnqueue (p);
+
+      uint32_t size = p->GetSize ();
+      m_nBytes += size;
+      m_nTotalReceivedBytes += size;
+
+      m_nPackets++;
+      m_nTotalReceivedPackets++;
+    }
+  return retval;
+}
+
+Ptr<Packet>
+RedQueue::Dequeue (void)
+{
+  NS_LOG_FUNCTION (this);
+
+  Ptr<Packet> packet = DoDequeue ();
+
+  if (packet)
+    {
+      NS_ASSERT (m_nBytes >= packet->GetSize ());
+      NS_ASSERT (m_nPackets > 0);
+
+      m_nBytes -= packet->GetSize ();
+      m_nPackets--;
+
+      NS_LOG_LOGIC ("m_traceDequeue (packet)");
+      m_traceDequeue (packet);
+    }
+  return packet;
+}
+
+Ptr<Packet>
+RedQueue::Remove (void)
+{
+  NS_LOG_FUNCTION (this);
+
+  Ptr<Packet> packet = DoDequeue ();
+
+  if (packet)
+    {
+      NS_ASSERT (m_nBytes >= packet->GetSize ());
+      NS_ASSERT (m_nPackets > 0);
+
+      m_nBytes -= packet->GetSize ();
+      m_nPackets--;
+
+      NS_LOG_LOGIC ("m_traceDequeue (packet)");
+      m_traceDequeue (packet);
+      m_traceDrop (packet);
+    }
+  return packet;
+}
+
+Ptr<const Packet>
+RedQueue::Peek (void) const
+{
+  NS_LOG_FUNCTION (this);
+  return DoPeek ();
+}
+
 
 bool
 RedQueue::DoEnqueue (Ptr<Packet> p)
@@ -309,14 +385,14 @@ RedQueue::DoEnqueue (Ptr<Packet> p)
     {
       NS_LOG_DEBUG ("\t Dropping due to Prob Mark " << m_qAvg);
       m_stats.unforcedDrop++;
-      Drop (p);
+      DropBeforeEnqueue (p);
       return false;
     }
   else if (dropType == DTYPE_FORCED)
     {
       NS_LOG_DEBUG ("\t Dropping due to Hard Mark " << m_qAvg);
       m_stats.forcedDrop++;
-      Drop (p);
+      DropBeforeEnqueue (p);
       if (m_isNs1Compat)
         {
           m_count = 0;
