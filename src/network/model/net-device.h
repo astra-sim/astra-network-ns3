@@ -28,6 +28,7 @@
 #include "ns3/ipv6-address.h"
 #include "ns3/object.h"
 #include "ns3/ptr.h"
+#include "ns3/custom-header.h"
 
 #include <stdint.h>
 

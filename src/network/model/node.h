@@ -25,6 +25,7 @@
 #include "ns3/callback.h"
 #include "ns3/object.h"
 #include "ns3/ptr.h"
+#include "ns3/net-device.h"
 
 #include <vector>
 
@@ -217,6 +218,9 @@ class Node : public Object
      * \returns true if checksums are enabled, false otherwise.
      */
     static bool ChecksumEnabled();
+
+    virtual bool SwitchReceiveFromDevice(Ptr<NetDevice> device, Ptr<Packet> packet, CustomHeader &ch);
+    virtual void SwitchNotifyDequeue(uint32_t ifIndex, uint32_t qIndex, Ptr<Packet> p);
 
   protected:
     /**
