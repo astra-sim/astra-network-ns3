@@ -38,14 +38,14 @@ class Packet;
  *
  * This class represents a very simple point to point channel.  Think full
  * duplex RS-232 or RS-422 with null modem and no handshaking.  There is no
- * multi-drop capability on this channel -- there can be a maximum of two 
+ * multi-drop capability on this channel -- there can be a maximum of two
  * point-to-point net devices connected.
  *
  * There are two "wires" in the channel.  The first device connected gets the
  * [0] wire to transmit on.  The second device gets the [1] wire.  There is a
  * state (IDLE, TRANSMITTING) associated with each wire.
  */
-class QbbChannel : public PointToPointChannel 
+class QbbChannel : public PointToPointChannel
 {
 public:
   static TypeId GetTypeId (void);
@@ -77,7 +77,7 @@ public:
    * \brief Get number of devices on this channel
    * \returns number of devices on this channel
    */
-  virtual uint32_t GetNDevices (void) const;
+  virtual std::size_t GetNDevices (void) const;
 
   /*
    * \brief Get QbbNetDevice corresponding to index i on this channel
@@ -107,9 +107,9 @@ protected:
   bool IsInitialized (void) const;
 
   /*
-   * \brief Get the net-device source 
+   * \brief Get the net-device source
    * \param i the link requested
-   * \returns Ptr to QbbNetDevice source for the 
+   * \returns Ptr to QbbNetDevice source for the
    * specified link
    */
   Ptr<QbbNetDevice> GetSource (uint32_t i) const;
@@ -117,7 +117,7 @@ protected:
   /*
    * \brief Get the net-device destination
    * \param i the link requested
-   * \returns Ptr to QbbNetDevice destination for 
+   * \returns Ptr to QbbNetDevice destination for
    * the specified link
    */
   Ptr<QbbNetDevice> GetDestination (uint32_t i) const;
@@ -130,10 +130,10 @@ private:
   int32_t       m_nDevices;
 
   /**
-   * The trace source for the packet transmission animation events that the 
+   * The trace source for the packet transmission animation events that the
    * device can fire.
    * Arguments to the callback are the packet, transmitting
-   * net device, receiving net device, transmission time and 
+   * net device, receiving net device, transmission time and
    * packet receipt time.
    *
    * @see class CallBackTraceSource

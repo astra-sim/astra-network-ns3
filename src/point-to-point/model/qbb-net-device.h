@@ -69,7 +69,7 @@ public:
  * \class QbbNetDevice
  * \brief A Device for a IEEE 802.1Qbb Network Link.
  */
-class QbbNetDevice : public PointToPointNetDevice 
+class QbbNetDevice : public PointToPointNetDevice
 {
 public:
   static const uint32_t qCnt = 8;	// Number of queues/priorities used
@@ -138,7 +138,7 @@ protected:
 	//Ptr<Node> m_node;
 
   bool TransmitStart (Ptr<Packet> p);
-  
+
   virtual void DoDispose(void);
 
   /// Reset the channel into READY state and try transmit again
@@ -158,7 +158,7 @@ protected:
   Ptr<BEgressQueue> m_queue;
 
   Ptr<QbbChannel> m_channel;
-  
+
   //pfc
   bool m_qbbEnabled;	//< PFC behaviour enabled
   bool m_qcnEnabled;

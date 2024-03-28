@@ -31,7 +31,7 @@ namespace ns3 {
 
 NS_OBJECT_ENSURE_REGISTERED (QbbChannel);
 
-TypeId 
+TypeId
 QbbChannel::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::QbbChannel")
@@ -43,13 +43,14 @@ QbbChannel::GetTypeId (void)
                    MakeTimeChecker ())
     .AddTraceSource ("TxRxQbb",
                      "Trace source indicating transmission of packet from the QbbChannel, used by the Animation interface.",
-                     MakeTraceSourceAccessor (&QbbChannel::m_txrxQbb))
+                     MakeTraceSourceAccessor (&QbbChannel::m_txrxQbb),
+                     "ns3::Packet::TracedCallback")
   ;
   return tid;
 }
 
 //
-// By default, you get a channel that 
+// By default, you get a channel that
 // has an "infitely" fast transmission speed and zero delay.
 QbbChannel::QbbChannel()
   :
@@ -62,11 +63,11 @@ QbbChannel::QbbChannel()
 void
 QbbChannel::Attach (Ptr<QbbNetDevice> device)
 {
-  
+
   //fflush(stdout);
   NS_LOG_FUNCTION (this << device);
   NS_ASSERT_MSG (m_nDevices < N_DEVICES, "Only two devices permitted");
-  NS_ASSERT (device != 0);
+  NS_ASSERT (device);
 
   m_link[m_nDevices++].m_src = device;
 //
@@ -107,7 +108,7 @@ QbbChannel::TransmitStart (
   return true;
 }
 
-uint32_t 
+size_t
 QbbChannel::GetNDevices (void) const
 {
   NS_LOG_FUNCTION_NOARGS ();

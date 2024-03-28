@@ -49,11 +49,11 @@ build_lib(
     model/ppp-header.h
     model/qbb-channel.h
     model/qbb-header.h
-    model/qbb-net-device.h
-    model/qbb-remote-channel.h
-    model/rdma-driver.h
-    model/rdma-hw.h
-    model/rdma-queue-pair.h
+    # model/qbb-net-device.h
+    # model/qbb-remote-channel.h
+    # model/rdma-driver.h
+    # model/rdma-hw.h
+    # model/rdma-queue-pair.h
     model/switch-mmu.h
     model/switch-node.h
     model/trace-format.h

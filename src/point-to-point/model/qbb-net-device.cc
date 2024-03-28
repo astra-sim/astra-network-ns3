@@ -37,7 +37,6 @@
 #include "ns3/simulator.h"
 #include "ns3/point-to-point-channel.h"
 #include "ns3/qbb-channel.h"
-#include "ns3/random-variable.h"
 #include "ns3/flow-id-tag.h"
 #include "ns3/qbb-header.h"
 #include "ns3/error-model.h"
@@ -51,7 +50,7 @@
 NS_LOG_COMPONENT_DEFINE("QbbNetDevice");
 
 namespace ns3 {
-	
+
 	uint32_t RdmaEgressQueue::ack_q_idx = 3;
 	// RdmaEgressQueue
 	TypeId RdmaEgressQueue::GetTypeId (void)
@@ -150,7 +149,7 @@ namespace ns3 {
 	Ptr<RdmaQueuePair> RdmaEgressQueue::GetQp(uint32_t i){
 		return m_qpGrp->Get(i);
 	}
- 
+
 	void RdmaEgressQueue::RecoverQueue(uint32_t i){
 		NS_ASSERT_MSG(i < m_qpGrp->GetN(), "RdmaEgressQueue::RecoverQueue: qIndex >= m_qpGrp->GetN()");
 		m_qpGrp->Get(i)->snd_nxt = m_qpGrp->Get(i)->snd_una;
@@ -199,12 +198,12 @@ namespace ns3 {
 				UintegerValue(5),
 				MakeUintegerAccessor(&QbbNetDevice::m_pausetime),
 				MakeUintegerChecker<uint32_t>())
-			.AddAttribute ("TxBeQueue", 
+			.AddAttribute ("TxBeQueue",
 					"A queue to use as the transmit queue in the device.",
 					PointerValue (),
 					MakePointerAccessor (&QbbNetDevice::m_queue),
 					MakePointerChecker<Queue> ())
-			.AddAttribute ("RdmaEgressQueue", 
+			.AddAttribute ("RdmaEgressQueue",
 					"A queue to use as the transmit queue in the device.",
 					PointerValue (),
 					MakePointerAccessor (&QbbNetDevice::m_rdmaEQ),
@@ -358,7 +357,7 @@ namespace ns3 {
 
 		if (m_receiveErrorModel && m_receiveErrorModel->IsCorrupt(packet))
 		{
-			// 
+			//
 			// If we have an error model and it indicates that it is time to lose a
 			// corrupted packet, don't forward this packet up, let it go.
 			//
