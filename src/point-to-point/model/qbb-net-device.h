@@ -41,8 +41,8 @@ public:
 	static uint32_t ack_q_idx;
 	int m_qlast;
 	uint32_t m_rrlast;
-	Ptr<DropTailQueue> m_ackQ; // highest priority queue
-	//Ptr<RedQueue> m_ackQ; 
+	Ptr<DropTailQueuePacket> m_ackQ; // highest priority queue
+	//Ptr<RedQueue> m_ackQ;
 	Ptr<RdmaQueuePairGroup> m_qpGrp; // queue pairs
 
 	// callback for get next packet
