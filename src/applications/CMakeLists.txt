@@ -4,6 +4,7 @@ build_lib(
     helper/bulk-send-helper.cc
     helper/on-off-helper.cc
     helper/packet-sink-helper.cc
+    helper/rdma-client-helper.cc
     helper/three-gpp-http-helper.cc
     helper/udp-client-server-helper.cc
     helper/udp-echo-helper.cc
@@ -29,6 +30,7 @@ build_lib(
     helper/bulk-send-helper.h
     helper/on-off-helper.h
     helper/packet-sink-helper.h
+    helper/rdma-client-helper.h
     helper/three-gpp-http-helper.h
     helper/udp-client-server-helper.h
     helper/udp-echo-helper.h

@@ -20,21 +20,36 @@ build_lib(
   SOURCE_FILES
     ${mpi_sources}
     helper/point-to-point-helper.cc
+    helper/qbb-helper.cc
     model/cn-header.cc
     model/pause-header.cc
     model/pint.cc
     model/point-to-point-channel.cc
     model/point-to-point-net-device.cc
+    model/point-to-point-remote-channel.cc
     model/ppp-header.cc
   HEADER_FILES
     ${mpi_headers}
     helper/point-to-point-helper.h
+    helper/qbb-helper.h
+    helper/sim-setting.h
     model/cn-header.h
     model/pause-header.h
     model/pint.h
     model/point-to-point-channel.h
     model/point-to-point-net-device.h
+    model/point-to-point-remote-channel.h
     model/ppp-header.h
+    model/qbb-channel.h
+    model/qbb-header.h
+    model/qbb-net-device.h
+    model/qbb-remote-channel.h
+    model/rdma-driver.h
+    model/rdma-hw.h
+    model/rdma-queue-pair.h
+    model/switch-mmu.h
+    model/switch-node.h
+    model/trace-format.h
   LIBRARIES_TO_LINK ${libnetwork}
                     ${mpi_libraries}
   TEST_SOURCES test/point-to-point-test.cc
