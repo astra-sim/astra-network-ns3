@@ -569,8 +569,10 @@ bool SetupNetwork(void (*qp_finish)(FILE *, Ptr<RdmaQueuePair>)) {
 
   uint32_t node_num, switch_num, link_num, trace_num;
   topof >> node_num >> switch_num >> link_num;
-  flowf >> flow_num;
-  tracef >> trace_num;
+  if (!(flowf >> flow_num))
+      flow_num = 0;
+  if (!(tracef >> trace_num))
+      trace_num = 0;
 
   std::vector<uint32_t> node_type(node_num, 0);
   for (uint32_t i = 0; i < switch_num; i++) {
