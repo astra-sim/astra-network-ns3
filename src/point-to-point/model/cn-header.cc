@@ -174,4 +174,4 @@ uint32_t CnHeader::Deserialize (Buffer::Iterator start)
 }
 
 
-}; // namespace ns3
+} // namespace ns3
