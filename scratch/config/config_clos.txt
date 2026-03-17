@@ -5,7 +5,7 @@ PACKET_PAYLOAD_SIZE 1000
 
 TOPOLOGY_FILE ../../scratch/topology/128_nodes_16_switch_topology.txt
 FLOW_FILE ../../scratch/output/flow.txt
-TRACE_FILE ../../scratch/output/trace.txt
+TRACE_FILE ../../scratch/input/trace.txt
 TRACE_OUTPUT_FILE ../../scratch/output/mix.tr
 FCT_OUTPUT_FILE ../../scratch/output/fct.txt
 PFC_OUTPUT_FILE ../../scratch/output/pfc.txt
