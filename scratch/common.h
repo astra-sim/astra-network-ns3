@@ -113,6 +113,7 @@ struct Interface {
   Interface() : idx(0), up(false) {}
 };
 map<Ptr<Node>, map<Ptr<Node>, Interface>> nbr2if;
+map<Ptr<Node>, map<Ptr<Node>, vector<uint32_t>>> nbr2ifs;
 // Mapping destination to next hop for each node: <node, <dest, <nexthop0, ...>
 // > >
 map<Ptr<Node>, map<Ptr<Node>, vector<Ptr<Node>>>> nextHop;
@@ -276,12 +277,13 @@ void SetRoutingEntries() {
       vector<Ptr<Node>> nexts = j->second;
       for (int k = 0; k < (int)nexts.size(); k++) {
         Ptr<Node> next = nexts[k];
-        uint32_t interface = nbr2if[node][next].idx;
-        if (node->GetNodeType() == 1)
-          DynamicCast<SwitchNode>(node)->AddTableEntry(dstAddr, interface);
-        else {
-          node->GetObject<RdmaDriver>()->m_rdma->AddTableEntry(dstAddr,
-                                                               interface);
+        for (uint32_t interface : nbr2ifs[node][next]) {
+          if (node->GetNodeType() == 1)
+            DynamicCast<SwitchNode>(node)->AddTableEntry(dstAddr, interface);
+          else {
+            node->GetObject<RdmaDriver>()->m_rdma->AddTableEntry(dstAddr,
+                                                                 interface);
+          }
         }
       }
     }
@@ -688,6 +690,8 @@ bool SetupNetwork(void (*qp_finish)(FILE *, Ptr<RdmaQueuePair>)) {
             .GetTimeStep();
     nbr2if[dnode][snode].bw =
         DynamicCast<QbbNetDevice>(d.Get(1))->GetDataRate().GetBitRate();
+    nbr2ifs[snode][dnode].push_back(nbr2if[snode][dnode].idx);
+    nbr2ifs[dnode][snode].push_back(nbr2if[dnode][snode].idx);
 
     // This is just to set up the connectivity between nodes. The IP addresses
     // are useless
@@ -900,6 +904,7 @@ bool SetupNetwork(void (*qp_finish)(FILE *, Ptr<RdmaQueuePair>)) {
 
   // schedule link down
   if (link_down_time > 0) {
+    if (nbr2ifs[n.Get(link_down_A)][n.Get(link_down_B)].size() > 1) { fprintf(stderr, "LINK_DOWN does not support parallel interfaces\n"); return false; }
     Simulator::Schedule(Seconds(2) + MicroSeconds(link_down_time),
                         &TakeDownLink, n, n.Get(link_down_A),
                         n.Get(link_down_B));
